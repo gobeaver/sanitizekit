@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # go-beaver-tag-sanitization
 
 A Go implementation of a safe user-content platform: users (and
@@ -364,3 +365,6 @@ findings fixed in each release.
 
 `make ci` runs the same gate as CI: vet, race tests, lint, `gosec` and
 `govulncheck`.
+=======
+# sanitizekit
+>>>>>>> 9b912be1677b248a9d2cf73f279f3a628f721eac
