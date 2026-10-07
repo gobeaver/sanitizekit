@@ -1,0 +1,4 @@
+github.com/gobeaver/configkit v0.1.1 h1:SApJLSV+J/6BS20ZDG4N/rDqYlo0heaFwhqBjZZ8YuY=
+github.com/gobeaver/configkit v0.1.1/go.mod h1:RFxmlRoaBh388pfyNXy0pP5/w8G3KKLYhb+pLQBab8k=
+golang.org/x/net v0.58.0 h1:ynWG7rqYi4ccpTEuPZ2QGWHktVEM9DMCj9yzDE0Q7To=
+golang.org/x/net v0.58.0/go.mod h1:YwCddHnFlT7eLQqVprV19OnhLGtc5xOKgE0RyqgfWAU=

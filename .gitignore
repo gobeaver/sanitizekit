@@ -1,0 +1,32 @@
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+
+# Go workspace files
+go.work
+go.work.sum
+
+# Editor / OS noise
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Test outputs. The curated corpus under usercontent/corpus/ and the
+# fuzz seeds Go writes under usercontent/testdata/fuzz/ are both
+# committed: a seed that once failed is a permanent regression case.
+testdata/
+!usercontent/testdata/
+!usercontent/testdata/**
+*.fuzz/
+
+# Build / dist
+bin/
+dist/

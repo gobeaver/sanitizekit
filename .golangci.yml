@@ -1,0 +1,122 @@
+# golangci-lint v2 configuration.
+version: "2"
+
+run:
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    # Bug prevention & security
+    - bidichk
+    - bodyclose
+    - errorlint
+    - gosec
+    - nilerr
+    - noctx
+    - sqlclosecheck
+
+    # Style & conventions
+    - gocritic
+    - predeclared
+    - revive
+
+    # Code quality
+    - nakedret
+    - nolintlint
+    - unconvert
+    - unparam
+
+    # Complexity
+    - gocyclo
+    - nestif
+
+    # Project rules
+    - forbidigo
+
+  settings:
+    errorlint:
+      errorf: true
+      asserts: true
+      comparison: true
+
+    forbidigo:
+      forbid:
+        - pattern: ^os\.Getenv$
+          msg: use configkit.Load into a Config struct instead of os.Getenv
+
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - style
+        - performance
+      disabled-checks:
+        - commentedOutCode
+        - whyNoLint
+        - unnamedResult
+        # Profile and the policy structs are passed by value on
+        # purpose: a security policy the caller can still mutate
+        # after handing it over is a footgun, and Sanitizer.Profile()
+        # returns a copy for the same reason. Passing them by
+        # pointer to save a copy would trade that away.
+        - hugeParam
+
+    gocyclo:
+      min-complexity: 15
+
+    nestif:
+      min-complexity: 5
+
+    nakedret:
+      max-func-lines: 30
+
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+      allow-unused: false
+
+    revive:
+      rules:
+        - name: exported
+          severity: warning
+        - name: package-comments
+          severity: warning
+        - name: var-naming
+          severity: warning
+
+    unparam:
+      check-exported: false
+
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - path: _test\.go
+        linters:
+          - bodyclose
+          - gocyclo
+          - gosec
+          - noctx
+          - unparam
+
+      - path: examples/
+        linters:
+          - errcheck
+          - gosec
+
+      - path: config/
+        linters:
+          - forbidigo
+        text: os\.Getenv
+
+issues:
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+formatters:
+  enable:
+    - gofmt
+    - goimports

